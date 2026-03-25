@@ -1,0 +1,323 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Blacklist API",
+    "description": "Colección de endpoints para el microservicio de Lista Negra Global de Emails.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "my-static-secret-token",
+      "type": "string"
+    },
+    {
+      "key": "test_email",
+      "value": "blocked@example.com",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "POST - Agregar email a lista negra (éxito)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test('Respuesta contiene mensaje', function () {",
+              "    var json = pm.response.json();",
+              "    pm.expect(json).to.have.property('message');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{test_email}}\",\n  \"app_uuid\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"blocked_reason\": \"Envío masivo de spam detectado.\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/blacklists",
+          "host": ["{{base_url}}"],
+          "path": ["blacklists"]
+        }
+      }
+    },
+    {
+      "name": "POST - Agregar email sin blocked_reason (opcional)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"noreply@example.com\",\n  \"app_uuid\": \"6ba7b810-9dad-11d1-80b4-00c04fd430c8\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/blacklists",
+          "host": ["{{base_url}}"],
+          "path": ["blacklists"]
+        }
+      }
+    },
+    {
+      "name": "POST - Sin token de autorización (401)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 401 Unauthorized', function () {",
+              "    pm.response.to.have.status(401);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\",\n  \"app_uuid\": \"550e8400-e29b-41d4-a716-446655440000\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/blacklists",
+          "host": ["{{base_url}}"],
+          "path": ["blacklists"]
+        }
+      }
+    },
+    {
+      "name": "POST - Token inválido (401)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 401 Unauthorized', function () {",
+              "    pm.response.to.have.status(401);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer token-incorrecto" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\",\n  \"app_uuid\": \"550e8400-e29b-41d4-a716-446655440000\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/blacklists",
+          "host": ["{{base_url}}"],
+          "path": ["blacklists"]
+        }
+      }
+    },
+    {
+      "name": "POST - Falta campo email requerido (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 400 Bad Request', function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "pm.test('Respuesta contiene errors', function () {",
+              "    var json = pm.response.json();",
+              "    pm.expect(json).to.have.property('errors');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"app_uuid\": \"550e8400-e29b-41d4-a716-446655440000\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/blacklists",
+          "host": ["{{base_url}}"],
+          "path": ["blacklists"]
+        }
+      }
+    },
+    {
+      "name": "POST - app_uuid no es un UUID válido (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 400 Bad Request', function () {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\",\n  \"app_uuid\": \"no-es-un-uuid\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/blacklists",
+          "host": ["{{base_url}}"],
+          "path": ["blacklists"]
+        }
+      }
+    },
+    {
+      "name": "GET - Consultar email en lista negra (existe)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('exist es true', function () {",
+              "    var json = pm.response.json();",
+              "    pm.expect(json.exist).to.be.true;",
+              "});",
+              "pm.test('Respuesta contiene blocked_reason', function () {",
+              "    var json = pm.response.json();",
+              "    pm.expect(json).to.have.property('blocked_reason');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/blacklists/{{test_email}}",
+          "host": ["{{base_url}}"],
+          "path": ["blacklists", "{{test_email}}"]
+        }
+      }
+    },
+    {
+      "name": "GET - Consultar email que NO está en lista negra",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('exist es false', function () {",
+              "    var json = pm.response.json();",
+              "    pm.expect(json.exist).to.be.false;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/blacklists/notblocked@example.com",
+          "host": ["{{base_url}}"],
+          "path": ["blacklists", "notblocked@example.com"]
+        }
+      }
+    },
+    {
+      "name": "GET - Sin token de autorización (401)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 401 Unauthorized', function () {",
+              "    pm.response.to.have.status(401);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/blacklists/{{test_email}}",
+          "host": ["{{base_url}}"],
+          "path": ["blacklists", "{{test_email}}"]
+        }
+      }
+    }
+  ]
+}
