@@ -30,6 +30,7 @@ def create_app(config_class=Config):
 
 
 app = create_app()
+application = app  # AWS Elastic Beanstalk expects the WSGI callable to be named 'application'
 
 if __name__ == '__main__':
     app.run(debug=False)

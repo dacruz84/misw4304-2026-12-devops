@@ -30,4 +30,4 @@ PyJWT==1.7.1
 python-dotenv==0.21.0
 
 # Production server
-gunicorn==20.1.0
+gunicorn==21.2.0
