@@ -19,7 +19,8 @@ def create_app(config_class=Config):
 
     api = Api(app)
 
-    from views.blacklist import BlacklistResource, BlacklistDetailResource
+    from views.blacklist import BlacklistResource, BlacklistDetailResource, HealthResource
+    api.add_resource(HealthResource, '/health')
     api.add_resource(BlacklistResource, '/blacklists')
     api.add_resource(BlacklistDetailResource, '/blacklists/<string:email>')
 

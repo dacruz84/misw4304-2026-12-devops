@@ -8,6 +8,11 @@ from models.blacklist import BlacklistEntry
 from schemas.blacklist import BlacklistCreateSchema
 
 
+class HealthResource(Resource):
+    def get(self):
+        return {'status': 'healthy'}, 200
+
+
 class BlacklistResource(Resource):
     method_decorators = [token_required]
 
