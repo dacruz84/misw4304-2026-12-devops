@@ -1,27 +1,12 @@
 {
   "info": {
-    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "_postman_id": "a8f1cf73-3404-4a33-aa1c-0ae729858ac6",
     "name": "Blacklist API",
     "description": "Colección de endpoints para el microservicio de Lista Negra Global de Emails.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53801681",
+    "_collection_link": "https://go.postman.co/collection/53801681-a8f1cf73-3404-4a33-aa1c-0ae729858ac6?source=collection_link"
   },
-  "variable": [
-    {
-      "key": "base_url",
-      "value": "http://localhost:5000",
-      "type": "string"
-    },
-    {
-      "key": "token",
-      "value": "my-static-secret-token",
-      "type": "string"
-    },
-    {
-      "key": "test_email",
-      "value": "blocked@example.com",
-      "type": "string"
-    }
-  ],
   "item": [
     {
       "name": "POST - Agregar email a lista negra (éxito)",
@@ -45,20 +30,36 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{token}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"{{test_email}}\",\n  \"app_uuid\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"blocked_reason\": \"Envío masivo de spam detectado.\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{base_url}}/blacklists",
-          "host": ["{{base_url}}"],
-          "path": ["blacklists"]
-        }
-      }
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "blacklists"
+          ]
+        },
+        "description": "## Descripción general\n\nEste request agrega un email a la lista negra global del microservicio. Corresponde al flujo exitoso (_happy path_): cuando todos los datos son válidos, el servidor responde con **HTTP 201 Created**, confirmando que el email fue bloqueado correctamente.\n\n## Autenticación\n\nSe requiere un **Bearer token** enviado en el encabezado `Authorization`. El token se referencia mediante la variable de entorno `{{token}}`.\n\n```\nAuthorization: Bearer {{token}}\n\n ```\n\n## Cuerpo de la solicitud (Request Body)\n\nEl cuerpo debe enviarse en formato **JSON** con los siguientes campos:\n\n| Campo | Tipo | Requerido | Descripción |\n| --- | --- | --- | --- |\n| `email` | string | Sí | Dirección de email a agregar a la lista negra. Utiliza la variable `{{test_email}}`. |\n| `app_uuid` | string (UUID) | Sí | Identificador único de la aplicación que solicita el bloqueo. |\n| `blocked_reason` | string | No | Razón por la que se bloquea el email. Ejemplo: `\"Envío masivo de spam detectado.\"` |\n\n**Ejemplo de cuerpo:**\n\n``` json\n{\n  \"email\": \"{{test_email}}\",\n  \"app_uuid\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"blocked_reason\": \"Envío masivo de spam detectado.\"\n}\n\n ```\n\n## Respuesta esperada\n\n**HTTP 201 Created**\n\nEl cuerpo de la respuesta contiene una propiedad `message` que confirma que la operación fue exitosa.\n\n``` json\n{\n  \"message\": \"Email agregado a la lista negra exitosamente.\"\n}\n\n ```\n\n## Variables utilizadas\n\n| Variable | Descripción |\n| --- | --- |\n| `{{base_url}}` | URL base del microservicio. Define el host y puerto donde está desplegada la API. |\n| `{{token}}` | Bearer token de autenticación requerido para autorizar la solicitud. |\n| `{{test_email}}` | Dirección de email que se utilizará en las pruebas para ser agregada a la lista negra. |\n\n## Pruebas automatizadas\n\nEste request incluye scripts de post-respuesta que validan automáticamente el comportamiento esperado:\n\n- **Status 201 Created**: Verifica que el servidor retorne el código de estado HTTP 201.\n    \n- **Respuesta contiene mensaje**: Verifica que el cuerpo de la respuesta contenga la propiedad `message`."
+      },
+      "response": []
     },
     {
       "name": "POST - Agregar email sin blocked_reason (opcional)",
@@ -78,20 +79,36 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{token}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"noreply@example.com\",\n  \"app_uuid\": \"6ba7b810-9dad-11d1-80b4-00c04fd430c8\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{base_url}}/blacklists",
-          "host": ["{{base_url}}"],
-          "path": ["blacklists"]
-        }
-      }
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "blacklists"
+          ]
+        },
+        "description": "## Descripción general\n\nEste request agrega un email a la lista negra global del microservicio **sin incluir el campo opcional `blocked_reason`**. Verifica que el campo `blocked_reason` es verdaderamente opcional y que la operación se completa exitosamente con **HTTP 201 Created** cuando se omite.\n\n## Autenticación\n\nSe requiere un **Bearer token** enviado en el encabezado `Authorization`. El token se referencia mediante la variable de entorno `{{token}}`.\n\n```\nAuthorization: Bearer {{token}}\n```\n\n## Cuerpo de la solicitud (Request Body)\n\nEl cuerpo debe enviarse en formato **JSON**. En este caso se envían únicamente los campos requeridos, omitiendo `blocked_reason`:\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `email` | string | Sí | Dirección de email a agregar a la lista negra. |\n| `app_uuid` | string (UUID) | Sí | Identificador único de la aplicación que solicita el bloqueo. |\n| `blocked_reason` | string | No | **Omitido en este request** para verificar que es opcional. |\n\n**Ejemplo de cuerpo:**\n\n```json\n{\n  \"email\": \"noreply@example.com\",\n  \"app_uuid\": \"6ba7b810-9dad-11d1-80b4-00c04fd430c8\"\n}\n```\n\n## Respuesta esperada\n\n**HTTP 201 Created**\n\nEl servidor debe responder con código 201 incluso cuando `blocked_reason` no es enviado, confirmando que el campo es opcional.\n\n```json\n{\n  \"message\": \"Email agregado a la lista negra exitosamente.\"\n}\n```\n\n## Variables utilizadas\n\n| Variable | Descripción |\n|---|---|\n| `{{base_url}}` | URL base del microservicio. Define el host y puerto donde está desplegada la API. |\n| `{{token}}` | Bearer token de autenticación requerido para autorizar la solicitud. |\n\n## Pruebas automatizadas\n\nEste request incluye scripts de post-respuesta que validan automáticamente el comportamiento esperado:\n\n- **Status 201 Created**: Verifica que el servidor retorne el código de estado HTTP 201."
+      },
+      "response": []
     },
     {
       "name": "POST - Sin token de autorización (401)",
@@ -111,19 +128,32 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"test@example.com\",\n  \"app_uuid\": \"550e8400-e29b-41d4-a716-446655440000\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{base_url}}/blacklists",
-          "host": ["{{base_url}}"],
-          "path": ["blacklists"]
-        }
-      }
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "blacklists"
+          ]
+        },
+        "description": "## Descripción general\n\nEste request intenta agregar un email a la lista negra global del microservicio **sin incluir un token de autorización** en la cabecera de la solicitud. Verifica que el endpoint protege correctamente el acceso y responde con un error `401 Unauthorized` cuando no se proporciona autenticación.\n\n## Endpoint\n\n`POST {{base_url}}/blacklists`\n\n## Autenticación\n\nEste request **no incluye token de autorización** de forma intencional, con el fin de validar que el servidor rechaza la solicitud.\n\n## Cabeceras\n\n| Cabecera | Valor |\n|---|---|\n| Content-Type | application/json |\n\n## Cuerpo de la solicitud\n\n```json\n{\n  \"email\": \"test@example.com\",\n  \"app_uuid\": \"550e8400-e29b-41d4-a716-446655440000\"\n}\n```\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `email` | string | Sí | Dirección de correo electrónico a agregar a la lista negra |\n| `app_uuid` | string (UUID) | Sí | Identificador único de la aplicación que realiza la solicitud |\n\n## Respuesta esperada\n\n**Código de estado:** `401 Unauthorized`\n\nEl servidor rechaza la solicitud porque no se proporcionó un token de autorización válido.\n\n## Pruebas automatizadas\n\n| Prueba | Descripción |\n|---|---|\n| Status 401 Unauthorized | Verifica que el servidor responde con código HTTP 401 cuando no se incluye token de autorización |"
+      },
+      "response": []
     },
     {
       "name": "POST - Token inválido (401)",
@@ -143,20 +173,36 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer token-incorrecto" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Authorization",
+            "value": "Bearer token-incorrecto"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"test@example.com\",\n  \"app_uuid\": \"550e8400-e29b-41d4-a716-446655440000\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{base_url}}/blacklists",
-          "host": ["{{base_url}}"],
-          "path": ["blacklists"]
-        }
-      }
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "blacklists"
+          ]
+        },
+        "description": "## Descripción general\n\nEste request intenta agregar un email a la lista negra global del microservicio **con un token de autorización inválido** en la cabecera de la solicitud. Verifica que el endpoint protege correctamente el acceso y responde con un error `401 Unauthorized` cuando el token proporcionado no es válido.\n\n## Endpoint\n\n`POST {{base_url}}/blacklists`\n\n## Autenticación\n\nEste request incluye un token de autorización **inválido** de forma intencional (`Bearer token-incorrecto`), con el fin de validar que el servidor rechaza la solicitud cuando el token no es correcto.\n\n## Cabeceras\n\n| Cabecera | Valor |\n|---|---|\n| Authorization | Bearer token-incorrecto |\n| Content-Type | application/json |\n\n## Cuerpo de la solicitud\n\n```json\n{\n  \"email\": \"test@example.com\",\n  \"app_uuid\": \"550e8400-e29b-41d4-a716-446655440000\"\n}\n```\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `email` | string | Sí | Dirección de correo electrónico a agregar a la lista negra |\n| `app_uuid` | string (UUID) | Sí | Identificador único de la aplicación que realiza la solicitud |\n\n## Respuesta esperada\n\n**Código de estado:** `401 Unauthorized`\n\nEl servidor rechaza la solicitud porque el token de autorización proporcionado no es válido.\n\n## Pruebas automatizadas\n\n| Prueba | Descripción |\n|---|---|\n| Status 401 Unauthorized | Verifica que el servidor responde con código HTTP 401 cuando se incluye un token de autorización inválido |"
+      },
+      "response": []
     },
     {
       "name": "POST - Falta campo email requerido (400)",
@@ -180,20 +226,36 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{token}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"app_uuid\": \"550e8400-e29b-41d4-a716-446655440000\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{base_url}}/blacklists",
-          "host": ["{{base_url}}"],
-          "path": ["blacklists"]
-        }
-      }
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "blacklists"
+          ]
+        },
+        "description": "## Descripción general\n\nEste request intenta agregar un email a la lista negra global del microservicio **sin incluir el campo requerido `email`** en el cuerpo de la solicitud. Verifica que el endpoint valida correctamente los campos obligatorios y responde con un error `400 Bad Request` cuando falta información esencial.\n\n## Endpoint\n\n`POST {{base_url}}/blacklists`\n\n## Autenticación\n\nEste request incluye un token de autorización válido en la cabecera `Authorization`.\n\n## Cabeceras\n\n| Cabecera | Valor |\n|---|---|\n| Authorization | Bearer {{token}} |\n| Content-Type | application/json |\n\n## Cuerpo de la solicitud\n\n```json\n{\n  \"app_uuid\": \"550e8400-e29b-41d4-a716-446655440000\"\n}\n```\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `email` | string | Sí | **Ausente intencionalmente** para provocar el error de validación |\n| `app_uuid` | string (UUID) | Sí | Identificador único de la aplicación que realiza la solicitud |\n\n## Respuesta esperada\n\n**Código de estado:** `400 Bad Request`\n\nEl servidor rechaza la solicitud porque el campo obligatorio `email` no fue incluido en el cuerpo. La respuesta debe contener un objeto con la propiedad `errors` que describa el problema de validación.\n\n## Pruebas automatizadas\n\n| Prueba | Descripción |\n|---|---|\n| Status 400 Bad Request | Verifica que el servidor responde con código HTTP 400 cuando falta el campo `email` |\n| Respuesta contiene errors | Verifica que el cuerpo de la respuesta contiene la propiedad `errors` con los detalles del error de validación |"
+      },
+      "response": []
     },
     {
       "name": "POST - app_uuid no es un UUID válido (400)",
@@ -213,20 +275,36 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{token}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"test@example.com\",\n  \"app_uuid\": \"no-es-un-uuid\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{base_url}}/blacklists",
-          "host": ["{{base_url}}"],
-          "path": ["blacklists"]
-        }
-      }
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "blacklists"
+          ]
+        },
+        "description": "## Descripción general\n\nEste request intenta agregar un email a la lista negra global del microservicio **con un valor inválido para el campo `app_uuid`** en el cuerpo de la solicitud. Verifica que el endpoint rechaza correctamente solicitudes donde `app_uuid` no tiene el formato de un UUID válido, respondiendo con un código de estado `400 Bad Request`.\n\n## Endpoint\n\n`POST {{base_url}}/blacklists`\n\n## Autenticación\n\nRequiere un token Bearer válido en la cabecera `Authorization`.\n\n| Cabecera | Valor |\n|---|---|\n| `Authorization` | `Bearer {{token}}` |\n| `Content-Type` | `application/json` |\n\n## Cuerpo de la solicitud\n\n```json\n{\n  \"email\": \"test@example.com\",\n  \"app_uuid\": \"no-es-un-uuid\"\n}\n```\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `email` | `string` | Email válido a agregar a la lista negra. |\n| `app_uuid` | `string` | Valor inválido — no cumple el formato UUID estándar (ej. `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`). |\n\n## Respuesta esperada\n\n**Código de estado:** `400 Bad Request`\n\nEl servidor debe rechazar la solicitud porque el valor de `app_uuid` no es un UUID válido.\n\n## Pruebas automatizadas\n\n| Prueba | Descripción |\n|---|---|\n| `Status 400 Bad Request` | Verifica que el servidor responde con el código de estado `400`. |"
+      },
+      "response": []
     },
     {
       "name": "GET - Consultar email en lista negra (existe)",
@@ -254,14 +332,24 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{token}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
         ],
         "url": {
           "raw": "{{base_url}}/blacklists/{{test_email}}",
-          "host": ["{{base_url}}"],
-          "path": ["blacklists", "{{test_email}}"]
-        }
-      }
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "blacklists",
+            "{{test_email}}"
+          ]
+        },
+        "description": "## Consultar email en lista negra (existe)\n\nVerifica si un correo electrónico se encuentra registrado en la lista negra del sistema.\n\n---\n\n### Método y URL\n\n```\nGET {{base_url}}/blacklists/{{test_email}}\n```\n\n---\n\n### Descripción\n\nEste endpoint consulta la lista negra para determinar si un email específico ha sido bloqueado. Cuando el email existe en la lista negra, la respuesta incluye el motivo por el cual fue bloqueado.\n\n---\n\n### Variables requeridas\n\n| Variable | Descripción |\n|---|---|\n| `base_url` | URL base del servidor donde está desplegada la API |\n| `test_email` | Dirección de correo electrónico que se desea consultar en la lista negra |\n| `token` | Token de acceso utilizado para autenticar la solicitud |\n\n---\n\n### Autenticación\n\nLa solicitud requiere un encabezado de autorización con un token Bearer:\n\n```\nAuthorization: Bearer {{token}}\n```\n\n---\n\n### Respuesta esperada\n\nCuando el email **existe** en la lista negra, el servidor retorna un código HTTP `200 OK` con un cuerpo JSON que contiene las siguientes propiedades:\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `exist` | `boolean` | Indica si el email está en la lista negra. Valor: `true` |\n| `blocked_reason` | `string` | Motivo por el cual el email fue bloqueado |\n\n**Ejemplo de respuesta:**\n\n```json\n{\n  \"exist\": true,\n  \"blocked_reason\": \"Spam reportado por múltiples usuarios\"\n}\n```\n\n---\n\n### Validaciones automáticas\n\nEste request incluye pruebas automáticas que verifican:\n- El código de respuesta es `200 OK`.\n- El campo `exist` tiene el valor `true`.\n- La respuesta contiene la propiedad `blocked_reason`."
+      },
+      "response": []
     },
     {
       "name": "GET - Consultar email que NO está en lista negra",
@@ -285,14 +373,24 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{token}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
         ],
         "url": {
           "raw": "{{base_url}}/blacklists/notblocked@example.com",
-          "host": ["{{base_url}}"],
-          "path": ["blacklists", "notblocked@example.com"]
-        }
-      }
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "blacklists",
+            "notblocked@example.com"
+          ]
+        },
+        "description": "## Consultar email que NO está en lista negra\n\nVerifica que un correo electrónico **no** se encuentra registrado en la lista negra del sistema. Corresponde al flujo donde el email consultado es válido para recibir comunicaciones.\n\n---\n\n### Método y URL\n\n```\nGET {{base_url}}/blacklists/notblocked@example.com\n```\n\n---\n\n### Autenticación\n\nRequiere un token Bearer válido en la cabecera de autorización:\n\n| Header | Valor |\n|---|---|\n| `Authorization` | `Bearer {{token}}` |\n\n---\n\n### Parámetros de ruta\n\n| Parámetro | Descripción | Ejemplo |\n|---|---|---|\n| `email` | Dirección de correo electrónico a consultar | `notblocked@example.com` |\n\n---\n\n### Respuesta esperada\n\n**Código de estado:** `200 OK`\n\nEl servidor responde con un objeto JSON indicando que el email **no** existe en la lista negra:\n\n```json\n{\n  \"exist\": false\n}\n```\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `exist` | `boolean` | `false` indica que el email no está en la lista negra |\n\n---\n\n### Pruebas automatizadas\n\nEste request incluye las siguientes validaciones en el script de post-respuesta:\n\n- **Status 200 OK** — Verifica que el servidor responde con código HTTP 200.\n- **exist es false** — Verifica que el campo `exist` en la respuesta JSON tiene el valor `false`."
+      },
+      "response": []
     },
     {
       "name": "GET - Sin token de autorización (401)",
@@ -314,10 +412,31 @@
         "header": [],
         "url": {
           "raw": "{{base_url}}/blacklists/{{test_email}}",
-          "host": ["{{base_url}}"],
-          "path": ["blacklists", "{{test_email}}"]
-        }
-      }
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "blacklists",
+            "{{test_email}}"
+          ]
+        },
+        "description": "## Descripción general\n\nEste request intenta consultar si un email se encuentra en la lista negra global del microservicio **sin incluir un token de autorización** en la cabecera de la solicitud. Verifica que el endpoint rechaza correctamente las solicitudes no autenticadas con un código de estado `401 Unauthorized`.\n\n---\n\n### Método y URL\n\n```\nGET {{base_url}}/blacklists/{{test_email}}\n```\n\n---\n\n### Cabeceras\n\n| Cabecera        | Valor         | Descripción                              |\n|-----------------|---------------|------------------------------------------|\n| Authorization   | *(ausente)*   | No se incluye token de autorización      |\n\n---\n\n### Parámetros de ruta\n\n| Parámetro     | Descripción                                      |\n|---------------|--------------------------------------------------|\n| `test_email`  | Correo electrónico a consultar en la lista negra |\n\n---\n\n### Respuesta esperada\n\n**Código de estado:** `401 Unauthorized`\n\nEl servidor rechaza la solicitud porque no se proporcionó un token de autorización válido en la cabecera `Authorization`.\n\n---\n\n### Script de prueba\n\nEste request incluye el siguiente test automatizado:\n\n```javascript\npm.test('Status 401 Unauthorized', function () {\n    pm.response.to.have.status(401);\n});\n```\n\nVerifica que la respuesta tenga el código de estado `401`, confirmando que el endpoint protege correctamente el acceso a la consulta de emails en la lista negra cuando no se presenta autenticación."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "token",
+      "value": "my-static-secret-token"
+    },
+    {
+      "key": "test_email",
+      "value": "blocked@example.com"
     }
   ]
 }
