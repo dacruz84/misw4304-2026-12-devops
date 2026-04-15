@@ -1,4 +1,4 @@
-# misw4304-2026-12-devops.
+# misw4304-2026-12-devops
 
 Microservicio REST en Python/Flask para la gestión de la lista negra global de emails. Permite agregar emails a la lista negra y consultar si un email está bloqueado.
 
