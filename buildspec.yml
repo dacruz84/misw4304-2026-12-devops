@@ -12,22 +12,17 @@ phases:
     runtime-versions:
       python: 3.11
     commands:
-      - echo "Instalando dependencias..."
       - pip install --upgrade pip
       - pip install -r requirements.txt
       - pip install pytest
 
   pre_build:
     commands:
-      - echo "Ejecutando pruebas unitarias..."
       - python -m pytest tests/ -v --tb=short
-      - echo "Pruebas finalizadas exitosamente"
 
   build:
     commands:
-      - echo "Empaquetando artefacto..."
-      - zip -r application.zip . --exclude "*.git*" --exclude "*__pycache__*" --exclude "*.pyc" --exclude ".env"
-      - echo "Artefacto generado: application.zip"
+      - zip -r application.zip . -x *.git* -x *__pycache__* -x *.pyc
 
 artifacts:
   files:
