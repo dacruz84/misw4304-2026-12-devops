@@ -36,7 +36,7 @@ phases:
   build:
     commands:
       - echo "Empaquetando artefacto..."
-      - zip -r application.zip . -x "*.git*" -x "**/__pycache__/*" -x "*.pyc" -x ".env" -x "*.md"
+      - zip -r application.zip . --exclude "*.git*" --exclude "*__pycache__*" --exclude "*.pyc" --exclude ".env"
       - echo "Artefacto generado: application.zip"
 
 artifacts:
