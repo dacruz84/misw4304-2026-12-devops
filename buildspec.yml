@@ -22,9 +22,12 @@ phases:
 
   build:
     commands:
-      - zip -r application.zip . -x *.git* -x *__pycache__* -x *.pyc
+      - echo "Build completed"
 
 artifacts:
   files:
-    - application.zip
-  discard-paths: yes
+    - '**/*'
+  exclude-paths:
+    - .git/**
+    - '**/__pycache__/**'
+    - '**/*.pyc'
