@@ -1,15 +1,5 @@
 version: 0.2
 
-# -----------------------------------------------------------------------
-# buildspec.yml — CI para AWS CodeBuild
-# Entrega 2 – MISW4304 DevOps
-#
-# Fases:
-#   install    → instala dependencias
-#   pre_build  → ejecuta pruebas unitarias (SQLite en memoria, sin BD externa)
-#   build      → empaqueta la app como artefacto ZIP para Elastic Beanstalk
-# -----------------------------------------------------------------------
-
 env:
   variables:
     DATABASE_URL: "sqlite:///:memory:"
