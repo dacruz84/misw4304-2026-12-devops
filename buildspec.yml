@@ -1,0 +1,45 @@
+version: 0.2
+
+# -----------------------------------------------------------------------
+# buildspec.yml — CI para AWS CodeBuild
+# Entrega 2 – MISW4304 DevOps
+#
+# Fases:
+#   install    → instala dependencias
+#   pre_build  → ejecuta pruebas unitarias (SQLite en memoria, sin BD externa)
+#   build      → empaqueta la app como artefacto ZIP para Elastic Beanstalk
+# -----------------------------------------------------------------------
+
+env:
+  variables:
+    DATABASE_URL: "sqlite:///:memory:"
+    STATIC_TOKEN: "test-static-token"
+    JWT_SECRET_KEY: "test-jwt-secret"
+
+phases:
+
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - echo "Instalando dependencias..."
+      - pip install --upgrade pip
+      - pip install -r requirements.txt
+      - pip install pytest
+
+  pre_build:
+    commands:
+      - echo "Ejecutando pruebas unitarias..."
+      - python -m pytest tests/ -v --tb=short
+      - echo "Pruebas finalizadas exitosamente"
+
+  build:
+    commands:
+      - echo "Empaquetando artefacto..."
+      - zip -r application.zip . -x "*.git*" -x "**/__pycache__/*" -x "*.pyc" -x ".env" -x "*.md"
+      - echo "Artefacto generado: application.zip"
+
+artifacts:
+  files:
+    - application.zip
+  discard-paths: yes
