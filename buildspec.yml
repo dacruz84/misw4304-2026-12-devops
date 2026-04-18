@@ -5,10 +5,9 @@ env:
     DATABASE_URL: "sqlite:///:memory:"
     STATIC_TOKEN: "test-static-token"
     JWT_SECRET_KEY: "test-jwt-secret"
-    AWS_DEFAULT_REGION: "us-east-1"
-    AWS_ACCOUNT_ID: "176972295357"
-    IMAGE_REPO_NAME: "blacklist-app"
-    IMAGE_TAG: "latest"
+    AWS_DEFAULT_REGION: "us-east-2"
+    AWS_ACCOUNT_ID: "243789392229"
+    IMAGE_REPO_NAME: "n2d/blacklist"
 
 phases:
 
@@ -22,6 +21,8 @@ phases:
 
   pre_build:
     commands:
+      - export IMAGE_TAG=$(python -c "import re; v=re.search(r'__version__\s*=\s*\"(.+?)\"', open('application.py').read()); print(v.group(1))")
+      - echo "Construyendo version $IMAGE_TAG..."
       - echo "Ejecutando pruebas unitarias..."
       - python -m pytest tests/ -v --tb=short
       - echo "Iniciando sesion en Amazon ECR..."
