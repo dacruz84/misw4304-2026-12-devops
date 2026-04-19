@@ -24,7 +24,7 @@ class TestConfig:
 @pytest.fixture(scope="session")
 def app():
     """Crea la app Flask con base de datos SQLite en memoria."""
-    _app = create_appDFGDFGSDGDF(TestConfig)
+    _app = create_app(TestConfig)
     with _app.app_context():
         _db.create_all()
         yield _app
