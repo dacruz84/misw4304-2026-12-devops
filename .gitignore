@@ -1,3 +1,12 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+.tfplan
+# tfvars con secretos (passwords, tokens) — los backend.tfvars sí se commitean
+terraform/environments/**/terraform.tfvars
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
