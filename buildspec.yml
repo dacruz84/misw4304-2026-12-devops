@@ -5,7 +5,7 @@ env:
     DATABASE_URL: "sqlite:///:memory:"
     STATIC_TOKEN: "test-static-token"
     JWT_SECRET_KEY: "test-jwt-secret"
-    AWS_DEFAULT_REGION: "us-east-2"
+    AWS_DEFAULT_REGION: "us-east-1"
     AWS_ACCOUNT_ID: "243789392229"
     IMAGE_REPO_NAME: "n2d/blacklist"
 
@@ -38,9 +38,9 @@ phases:
     commands:
       - echo "Subiendo imagen a ECR..."
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-      - echo "Generando Dockerrun.aws.json..."
-      - printf '{"AWSEBDockerrunVersion":"1","Image":{"Name":"%s","Update":"true"},"Ports":[{"ContainerPort":"5000"}]}' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG > Dockerrun.aws.json
+      - echo "Generando imagedefinitions.json para ECS..."
+      - printf '[{"name":"blacklist-container","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
   files:
-    - Dockerrun.aws.json
+    - imagedefinitions.json
