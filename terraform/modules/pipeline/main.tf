@@ -146,14 +146,16 @@ resource "aws_iam_role_policy" "codepipeline" {
           "ecs:DescribeServices",
           "ecs:DescribeTaskDefinition",
           "ecs:RegisterTaskDefinition",
-          "ecs:UpdateService"
+          "ecs:UpdateService",
+          "ecs:ListTaskDefinitions",
+          "ecs:DescribeClusters"
         ]
         Resource = "*"
       },
       {
         Effect   = "Allow"
         Action   = ["iam:PassRole"]
-        Resource = var.ecs_task_execution_role_arn
+        Resource = "*"
       }
     ]
   })
