@@ -152,3 +152,4 @@ Configurar las variables de la colección antes de ejecutar:
 | `base_url` | `http://localhost:5000` |
 | `token` | valor de `STATIC_TOKEN` en `.env` |
 
+
