@@ -58,6 +58,11 @@ resource "aws_iam_role_policy" "codebuild" {
           "ecr:PutImage"
         ]
         Resource = var.ecr_repository_arn
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["codestar-connections:UseConnection"]
+        Resource = aws_codestarconnections_connection.github.arn
       }
     ]
   })
