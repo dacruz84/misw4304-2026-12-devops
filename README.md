@@ -153,3 +153,4 @@ Configurar las variables de la colección antes de ejecutar:
 | `token` | valor de `STATIC_TOKEN` en `.env` |
 
 
+
