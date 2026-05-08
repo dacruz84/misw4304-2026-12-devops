@@ -4,6 +4,7 @@
 *.tfstate.backup
 *.tfplan
 .tfplan
+**/.terraform.lock.hcl
 # tfvars con secretos (passwords, tokens) — los backend.tfvars sí se commitean
 terraform/environments/**/terraform.tfvars
 
