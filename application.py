@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-__version__ = "1.0.5"
+__version__ = "1.0.6"
 
 from flask import Flask
 from flask_restful import Api
