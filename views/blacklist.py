@@ -1,3 +1,4 @@
+import newrelic.agent
 from flask import request
 from flask_restful import Resource
 from marshmallow import ValidationError
@@ -21,6 +22,7 @@ class BlacklistResource(Resource):
         try:
             data = schema.load(request.get_json(force=True) or {})
         except ValidationError as err:
+            newrelic.agent.notice_error()
             return {'message': 'Error de validación.', 'errors': err.messages}, 400
 
         entry = BlacklistEntry(

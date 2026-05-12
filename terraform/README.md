@@ -171,9 +171,29 @@ Anota el endpoint del output `db_address`, luego crea el parámetro SSM con la c
 aws ssm put-parameter --name "/blacklist/DATABASE_URL" --value "postgresql://blacklist_user:<db_password>@<db_address>:5432/blacklist_db" --type "SecureString" --region us-east-1
 ```
 
+### 2.5. Parámetro SSM — New Relic License Key
+
+Antes de aprovisionar ECS, crea el parámetro de New Relic en AWS SSM Parameter Store. Obtén tu License Key en [https://one.newrelic.com/api-keys](https://one.newrelic.com/api-keys).
+
+```bash
+aws ssm put-parameter --name "/blacklist/NEW_RELIC_LICENSE_KEY" --value "<tu-new-relic-license-key>" --type "SecureString" --region us-east-1
+```
+
+Luego anota el ARN del parámetro:
+
+```bash
+aws ssm get-parameter --name "/blacklist/NEW_RELIC_LICENSE_KEY" --query "Parameter.ARN" --output text --region us-east-1
+```
+
+Actualiza `ssm_new_relic_license_key_arn` en `environments/da.cruz84/ecs/terraform.tfvars` con ese ARN.
+
+> El parámetro se almacena cifrado con la clave KMS por defecto de AWS. La License Key **nunca viaja en texto plano** en el código ni en los logs.
+
+---
+
 ### 3. ECS
 
-Antes de aplicar, actualiza `ssm_database_url_arn` en `environments/da.cruz84/ecs/terraform.tfvars` con el ARN real del parámetro creado arriba.
+Antes de aplicar, confirma que `ssm_database_url_arn` y `ssm_new_relic_license_key_arn` en `environments/da.cruz84/ecs/terraform.tfvars` tienen los ARN reales de los parámetros creados arriba.
 
 ```bash
 cd stacks/ecs

@@ -29,5 +29,8 @@ PyJWT==1.7.1
 # Env vars
 python-dotenv==0.21.0
 
+# Observability
+newrelic>=9.0.0
+
 # Production server
 gunicorn==21.2.0

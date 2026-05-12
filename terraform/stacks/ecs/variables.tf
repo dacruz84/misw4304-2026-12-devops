@@ -70,3 +70,14 @@ variable "jwt_secret_key" {
   type        = string
   sensitive   = true
 }
+
+variable "ssm_new_relic_license_key_arn" {
+  description = "ARN del parametro SSM con la New Relic License Key."
+  type        = string
+}
+
+variable "new_relic_app_name" {
+  description = "Nombre de la aplicacion en New Relic."
+  type        = string
+  default     = "Blacklist API"
+}

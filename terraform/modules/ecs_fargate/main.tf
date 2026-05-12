@@ -41,7 +41,10 @@ resource "aws_iam_role_policy" "ecs_ssm_access" {
     Statement = [{
       Effect   = "Allow"
       Action   = ["ssm:GetParameters", "ssm:GetParameter"]
-      Resource = [var.ssm_database_url_arn]
+      Resource = [
+        var.ssm_database_url_arn,
+        var.ssm_new_relic_license_key_arn,
+      ]
     }]
   })
 }
@@ -88,14 +91,22 @@ resource "aws_ecs_task_definition" "app" {
       protocol      = "tcp"
     }]
     environment = [
-      { name = "STATIC_TOKEN",  value = var.static_token },
-      { name = "JWT_SECRET_KEY", value = var.jwt_secret_key },
-      { name = "FLASK_APP",      value = "application.py" }
+      { name = "STATIC_TOKEN",      value = var.static_token },
+      { name = "JWT_SECRET_KEY",    value = var.jwt_secret_key },
+      { name = "FLASK_APP",         value = "application.py" },
+      { name = "NEW_RELIC_APP_NAME", value = var.new_relic_app_name },
+      { name = "NEW_RELIC_CONFIG_FILE", value = "newrelic.ini" }
     ]
-    secrets = [{
-      name      = "DATABASE_URL"
-      valueFrom = var.ssm_database_url_arn
-    }]
+    secrets = [
+      {
+        name      = "DATABASE_URL"
+        valueFrom = var.ssm_database_url_arn
+      },
+      {
+        name      = "NEW_RELIC_LICENSE_KEY"
+        valueFrom = var.ssm_new_relic_license_key_arn
+      },
+    ]
     logConfiguration = {
       logDriver = "awslogs"
       options = {
