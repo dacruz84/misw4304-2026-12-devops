@@ -9,4 +9,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "application:app"]
+CMD ["newrelic-admin", "run-program", "gunicorn", "--bind", "0.0.0.0:5000", "application:app"]
