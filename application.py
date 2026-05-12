@@ -4,7 +4,7 @@ newrelic.agent.initialize('newrelic.ini')
 from dotenv import load_dotenv
 load_dotenv()
 
-__version__ = "1.0.11"
+__version__ = "1.0.12"
 
 from flask import Flask
 from flask_restful import Api
